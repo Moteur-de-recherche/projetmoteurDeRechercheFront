@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar"; // Import de la Navbar
+import Navbarui from "./components/ui/Navbarui"
 import Footer from "./components/Footer"; // Import du Footer
 
 const geistSans = Geist({
@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Ajout de la Navbar */}
-        <Navbar />
+        <Navbarui />
         
         {/* Contenu dynamique des pages */}
         <main className="container mx-auto p-4">{children}</main>

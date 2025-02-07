@@ -16,7 +16,6 @@ interface VortexProps {
   rangeSpeed?: number;
   baseRadius?: number;
   rangeRadius?: number;
-  backgroundColor?: string;
 }
 
 export const Vortex: React.FC<VortexProps> = (props) => {
@@ -38,10 +37,10 @@ export const Vortex: React.FC<VortexProps> = (props) => {
   const xOff = 0.00125;
   const yOff = 0.00125;
   const zOff = 0.0005;
-  const backgroundColor = props.backgroundColor || "#000000";
   let tick = 0;
   const noise3D = createNoise3D();
   let particleProps = new Float32Array(particlePropsLength);
+  // Note : Même si le tableau est déclaré avec "const", on peut modifier ses valeurs.
   const center: [number, number] = [0, 0];
 
   const TAU = 2 * Math.PI;
@@ -60,7 +59,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     if (canvas && container) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        resize(canvas,);
+        resize(canvas);
         initParticles();
         draw(canvas, ctx);
       }
@@ -78,7 +77,6 @@ export const Vortex: React.FC<VortexProps> = (props) => {
   const initParticle = (i: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const x = rand(canvas.width);
     const y = center[1] + randRange(rangeY);
     const vx = 0;
@@ -88,16 +86,17 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     const speed = baseSpeed + rand(rangeSpeed);
     const radius = baseRadius + rand(rangeRadius);
     const hue = baseHue + rand(rangeHue);
-
     particleProps.set([x, y, vx, vy, life, ttl, speed, radius, hue], i);
   };
 
   const draw = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     tick++;
 
+    // Efface le canevas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Pour éviter un fond noir, on retire l'appel à fillRect.
+    // Si nécessaire, vous pouvez définir ctx.fillStyle = "rgba(0,0,0,0)" avant d'appeler fillRect.
 
     drawParticles(ctx);
     renderGlow(canvas, ctx);
@@ -115,7 +114,6 @@ export const Vortex: React.FC<VortexProps> = (props) => {
   const updateParticle = (i: number, ctx: CanvasRenderingContext2D) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const i2 = i + 1,
       i3 = i + 2,
       i4 = i + 3,
@@ -124,7 +122,6 @@ export const Vortex: React.FC<VortexProps> = (props) => {
       i7 = i + 6,
       i8 = i + 7,
       i9 = i + 8;
-
     const x = particleProps[i];
     const y = particleProps[i2];
     const n = noise3D(x * xOff, y * yOff, tick * zOff) * noiseSteps * TAU;
@@ -179,9 +176,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0;
   };
 
-  const resize = (
-    canvas: HTMLCanvasElement,
-  ) => {
+  const resize = (canvas: HTMLCanvasElement) => {
     const { innerWidth, innerHeight } = window;
     canvas.width = innerWidth;
     canvas.height = innerHeight;
@@ -189,10 +184,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     center[1] = 0.5 * canvas.height;
   };
 
-  const renderGlow = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) => {
+  const renderGlow = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.filter = "blur(8px) brightness(200%)";
     ctx.globalCompositeOperation = "lighter";
@@ -206,10 +198,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     ctx.restore();
   };
 
-  const renderToScreen = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) => {
+  const renderToScreen = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     ctx.drawImage(canvas, 0, 0);
@@ -223,7 +212,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
       if (canvas && ctx) {
-        resize(canvas,);
+        resize(canvas);
       }
     };
 
@@ -237,7 +226,7 @@ export const Vortex: React.FC<VortexProps> = (props) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         ref={containerRef}
-        className="absolute h-full w-full inset-0 z-0 bg-transparent flex items-center justify-center"
+        className="absolute h-full w-full inset-0 z-0 flex items-center justify-center"
       >
         <canvas ref={canvasRef} />
       </motion.div>

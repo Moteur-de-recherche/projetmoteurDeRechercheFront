@@ -37,7 +37,9 @@ export default function Home() {
           <h1 className="text-5xl font-bold text-white mb-4">
             Trouvez votre Livre en un Clic !
           </h1>
-          <SearchBar />
+          <div className="w-full max-w-lg">
+            <SearchBar />
+          </div>
         </div>
       </section>
 
