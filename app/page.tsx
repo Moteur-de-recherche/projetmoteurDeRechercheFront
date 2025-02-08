@@ -34,7 +34,7 @@ export default function Home() {
         <VortexBackground />
         {/* Contenu superposé : titre et barre de recherche */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-          <h1 className="text-5xl font-bold text-white mb-4">
+          <h1 className="text-5xl font-bold text-black mb-4">
             Trouvez votre Livre en un Clic !
           </h1>
           <div className="w-full max-w-lg">

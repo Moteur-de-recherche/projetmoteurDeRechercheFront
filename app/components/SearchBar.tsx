@@ -21,7 +21,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <button onClick={handleSearch} className="bg-[#894baf] text-white px-4 py-2 rounded-md">
+      <button onClick={handleSearch} className="bg-[#894baf] text-black px-4 py-2 rounded-md">
         Rechercher
       </button>
     </div>
