@@ -2,10 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Réinitialiser les marges et paddings par défaut */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Optionnel : appliquer le box-sizing sur tous les éléments */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 /* Ajustement global pour le body */
 body {
   font-family: sans-serif;
-  background-color: #ffffff;
+  background-color: #fbf7f7;
 }
 
 /* Animation des boutons */
@@ -16,3 +30,18 @@ button {
 button:hover {
   transform: scale(1.05);
 }
+
+@keyframes gradientRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-border {
+  background-size: 200% 200%;
+  animation: gradientRotate 3s linear infinite;
+}
+

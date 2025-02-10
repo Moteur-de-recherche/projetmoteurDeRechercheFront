@@ -21,21 +21,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="fr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* Ajout de la Navbar */}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Navbar toujours présente */}
         <Navbar />
-        
-        {/* Contenu dynamique des pages */}
-        <main className="container mx-auto p-4">{children}</main>
-        
-        {/* Ajout du Footer */}
+        {/* Suppression de la classe "container" pour permettre un layout en pleine largeur */}
+        <main className="w-full min-h-screen">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

@@ -9,11 +9,11 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-[#894baf] text-white p-4 shadow-lg">
+    <nav className="bg-[#441064] text-white p-4 shadow-lg">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/images/logo-infinity-moteur-removebg.png" alt="Logo" width={50} height={50} />
+          <Image src="/images/logo-infinity-moteur.png" alt="Logo" width={50} height={50} />
           <span className="text-xl font-bold">Moteur de Recherche</span>
         </Link>
 
@@ -42,7 +42,7 @@ export default function Navbar() {
         </button>
 
         {menuOpen && (
-          <ul className="absolute top-16 right-4 bg-blue-700 text-white p-4 rounded-lg shadow-md md:hidden">
+          <ul className="absolute top-16 right-4 bg-[#5f22a3] text-white p-4 rounded-lg shadow-md md:hidden">
             <li className="py-2">
               <Link href="/" onClick={() => setMenuOpen(false)}>Accueil</Link>
             </li>

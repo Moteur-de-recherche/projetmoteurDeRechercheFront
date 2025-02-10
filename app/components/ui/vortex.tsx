@@ -40,7 +40,6 @@ export const Vortex: React.FC<VortexProps> = (props) => {
   let tick = 0;
   const noise3D = createNoise3D();
   let particleProps = new Float32Array(particlePropsLength);
-  // Note : Même si le tableau est déclaré avec "const", on peut modifier ses valeurs.
   const center: [number, number] = [0, 0];
 
   const TAU = 2 * Math.PI;
@@ -91,17 +90,10 @@ export const Vortex: React.FC<VortexProps> = (props) => {
 
   const draw = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     tick++;
-
-    // Efface le canevas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Pour éviter un fond noir, on retire l'appel à fillRect.
-    // Si nécessaire, vous pouvez définir ctx.fillStyle = "rgba(0,0,0,0)" avant d'appeler fillRect.
-
     drawParticles(ctx);
     renderGlow(canvas, ctx);
     renderToScreen(canvas, ctx);
-
     window.requestAnimationFrame(() => draw(canvas, ctx));
   };
 
@@ -134,16 +126,13 @@ export const Vortex: React.FC<VortexProps> = (props) => {
     const y2 = y + vy * speed;
     const radius = particleProps[i8];
     const hue = particleProps[i9];
-
     drawParticle(x, y, x2, y2, life, ttl, radius, hue, ctx);
-
     const newLife = life + 1;
     particleProps[i] = x2;
     particleProps[i2] = y2;
     particleProps[i3] = vx;
     particleProps[i4] = vy;
     particleProps[i5] = newLife;
-
     if (checkBounds(x, y, canvas) || newLife > ttl) {
       initParticle(i);
     }
@@ -207,7 +196,6 @@ export const Vortex: React.FC<VortexProps> = (props) => {
 
   useEffect(() => {
     setup();
-
     const handleResize = () => {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
@@ -215,22 +203,20 @@ export const Vortex: React.FC<VortexProps> = (props) => {
         resize(canvas);
       }
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className={cn("relative h-full w-full", props.containerClassName)}>
+    <div className={cn("absolute inset-0", props.containerClassName)}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         ref={containerRef}
-        className="absolute h-full w-full inset-0 z-0 flex items-center justify-center"
+        className="absolute inset-0 z-0 flex items-center justify-center"
       >
         <canvas ref={canvasRef} />
       </motion.div>
-
       <div className={cn("relative z-10", props.className)}>
         {props.children}
       </div>

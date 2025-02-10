@@ -1,13 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import VortexBackground from "./components/VortexBackground";
 import SearchBar from "./components/SearchBar";
-import { HeroParallax } from "./components/ui/heroParalax";
-import { Product } from "./components/ui/heroParalax";
+import { HeroParallax, Product } from "./components/ui/heroParalax";
+import { useSearchParams } from "next/navigation";
+import { fetchBooks } from "./utils/fetchBooks";
+import { BackgroundGradientAnimation } from "./components/ui/BackgroundAnimationUi";
 
-// Exemple de données produits (au moins 15 objets pour la section parallax)
-const products: Product[] = [
+// Définition de l'interface Book (correspondant à la structure renvoyée par l'API)
+interface Book {
+  id: number;
+  title: string;
+  description: string;
+  subjects: string[];
+  bookshelves: string[];
+  cover_image: string;
+  download_count: number;
+  copyright: boolean;
+  text_content: string;
+}
+
+// Fonction de mapping pour transformer un Book en Product
+const mapBookToProduct = (book: Book): Product => ({
+  title: book.title,
+  link: `/book/${book.id}`,
+  thumbnail: book.cover_image,
+});
+
+// Produits par défaut en l'absence de recherche
+const defaultProducts: Product[] = [
   { title: "Livre 1", link: "/produit1", thumbnail: "/images/background-hero.jpg" },
   { title: "Livre 2", link: "/produit2", thumbnail: "/images/background-hero.jpg" },
   { title: "Livre 3", link: "/produit3", thumbnail: "/images/background-hero.jpg" },
@@ -26,15 +48,36 @@ const products: Product[] = [
 ];
 
 export default function Home() {
+  // Récupération du paramètre "search" dans l'URL
+  const searchParams = useSearchParams();
+  const query = searchParams.get("search") || "";
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
+
+  useEffect(() => {
+    if (query.trim()) {
+      const loadBooks = async () => {
+        const books = await fetchBooks(query);
+        const mappedProducts = books.map(mapBookToProduct);
+        setProducts(mappedProducts);
+      };
+      loadBooks();
+    } else {
+      setProducts(defaultProducts);
+    }
+  }, [query]);
+
   return (
     <div>
-      {/* Section supérieure avec fond Vortex et barre de recherche */}
-      <section className="relative w-full h-[80vh] overflow-hidden">
-        {/* Fond Vortex en arrière-plan */}
-        <VortexBackground />
-        {/* Contenu superposé : titre et barre de recherche */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-          <h1 className="text-5xl font-bold text-black mb-4">
+      {/* Section supérieure : occupe toute la hauteur de l'écran */}
+      <section className="relative w-full h-screen overflow-hidden">
+        {/* Conteneur des animations de fond qui prend toute la taille de la section */}
+        <div className="absolute inset-0 -z-10 w-full h-full">
+          <BackgroundGradientAnimation />
+          <VortexBackground />
+        </div>
+        {/* Conteneur du contenu principal (titre et barre de recherche) */}
+        <div className="relative z-50 flex flex-col items-center justify-center h-full px-4">
+          <h1 className="text-5xl font-bold text-white mb-4">
             Trouvez votre Livre en un Clic !
           </h1>
           <div className="w-full max-w-lg">
@@ -43,7 +86,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section parallax avec les produits */}
+      {/* Section parallax affichant les produits */}
       <section>
         <HeroParallax products={products} />
       </section>
