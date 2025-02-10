@@ -15,6 +15,10 @@ export interface Product {
   title: string;
   link: string;
   thumbnail: string;
+  description?: string;
+  subjects?: string[] | string;
+  bookshelves?: string[] | string;
+  downloadCount?: number;
 }
 
 interface HeroParallaxProps {
@@ -22,7 +26,7 @@ interface HeroParallaxProps {
 }
 
 export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
-  // Découpage des produits en 3 lignes (assurez-vous d'avoir au moins 15 produits)
+  // Découpage des produits en 3 lignes (assure-toi d'avoir au moins 15 produits)
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
@@ -66,7 +70,6 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
       className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
-
       <motion.div
         style={{
           rotateX,
@@ -110,10 +113,10 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
 export const Header: React.FC = () => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
-      <h1 className="text-2xl md:text-7xl font-bold text-black">
+      <h1 className="text-2xl md:text-7xl font-bold text-white">
         Trouvez nos <br /> meilleurs livres
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 text-black">
+      <p className="max-w-2xl text-base md:text-xl mt-8 text-white">
         Vous pouvez trouver nos meilleurs livres répertoriés ici. Il y en a pour tout le monde, faites votre choix.
       </p>
     </div>
@@ -126,25 +129,55 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, translate }) => {
+  // Fonction pour tronquer le texte
+  const truncate = (text: string, maxLength: number) =>
+    text.length > maxLength ? text.slice(0, maxLength) + "... Voir plus" : text;
+
   return (
     <motion.div
       style={{ x: translate }}
       whileHover={{ y: -20 }}
-      className="group/product h-96 w-[30rem] relative flex-shrink-0"
+      className="group/product h-[36rem] w-[30rem] relative flex-shrink-0 overflow-hidden rounded-lg shadow-xl"
     >
-      <Link href={product.link} className="block group-hover/product:shadow-2xl">
+      <Link href={product.link} className="block">
         <Image
           src={product.thumbnail}
           height={600}
           width={600}
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          className="object-cover h-full w-full"
           alt={product.title}
         />
       </Link>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-        {product.title}
-      </h2>
+      {/* Overlay avec détails */}
+      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4 transition-opacity duration-300 group-hover/product:opacity-100">
+        <h2 className="text-white text-xl font-bold">{product.title}</h2>
+        <p className="text-white text-sm mt-2">
+          {truncate(product.description || "", 200)}
+        </p>
+        <div className="mt-2">
+          {product.subjects && (
+            <p className="text-white text-xs">
+              <strong>Sujets:</strong>{" "}
+              {Array.isArray(product.subjects)
+                ? product.subjects.join(", ")
+                : product.subjects || "N/A"}
+            </p>
+          )}
+          {product.bookshelves && (
+            <p className="text-white text-xs">
+              <strong>Rayons:</strong>{" "}
+              {Array.isArray(product.bookshelves)
+                ? product.bookshelves.join(", ")
+                : product.bookshelves || "N/A"}
+            </p>
+          )}
+          {product.downloadCount !== undefined && (
+            <p className="text-white text-xs">
+              <strong>Téléchargements:</strong> {product.downloadCount}
+            </p>
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 };
