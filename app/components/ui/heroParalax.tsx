@@ -113,10 +113,10 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
 export const Header: React.FC = () => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
-      <h1 className="text-2xl md:text-7xl font-bold text-white">
+      <h1 className="text-2xl md:text-7xl font-bold text-black">
         Trouvez nos <br /> meilleurs livres
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 text-white">
+      <p className="max-w-2xl text-base md:text-xl mt-8 text-black">
         Vous pouvez trouver nos meilleurs livres répertoriés ici. Il y en a pour tout le monde, faites votre choix.
       </p>
     </div>
@@ -139,6 +139,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, translate }) 
       whileHover={{ y: -20 }}
       className="group/product h-[36rem] w-[30rem] relative flex-shrink-0 overflow-hidden rounded-lg shadow-xl"
     >
+      {/* Lien vers la page de détail */}
       <Link href={product.link} className="block">
         <Image
           src={product.thumbnail}
@@ -176,6 +177,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, translate }) 
               <strong>Téléchargements:</strong> {product.downloadCount}
             </p>
           )}
+        </div>
+        <div className="mt-4">
+          <Link href={product.link} className="text-blue-300 hover:underline">
+            Voir plus
+          </Link>
         </div>
       </div>
     </motion.div>
