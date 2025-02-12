@@ -4,12 +4,17 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export async function fetchBooks(query: string) {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/book/books?search=${encodeURIComponent(query)}`
-    );
+    // Utilise le endpoint de recherche standard et le paramètre "q"
+    const url = `${API_BASE_URL}/api/books/search/?q=${encodeURIComponent(query)}`;
+    console.log("Fetching URL:", url);
+
+    const response = await fetch(url, { mode: "cors" });
+
     if (!response.ok) {
+      console.error("Fetch error, status:", response.status, response.statusText);
       throw new Error("Erreur lors de la récupération des livres");
     }
+
     const data = await response.json();
     console.log("Données récupérées :", data);
 
