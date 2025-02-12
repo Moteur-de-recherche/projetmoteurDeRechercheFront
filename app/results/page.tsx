@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchBooks } from "../utils/fetchBooks";
 import { HeroParallax, Product } from "../components/ui/heroParalax";
+import LoadingSpinner from "../components/LoadingSpinner"; // Import du spinner
 
 interface Book {
   id: number;
@@ -27,8 +28,6 @@ const mapBookToProduct = (book: Book): Product => ({
   bookshelves: book.bookshelves,
   downloadCount: book.download_count,
 });
-
-// Livres par défaut en l'absence de recherche
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
@@ -58,7 +57,7 @@ export default function SearchResults() {
         <h1 className="text-3xl text-black font-bold mb-4">
           Résultats pour : `{query}`
         </h1>
-        {loading && <p>Chargement des résultats...</p>}
+        {loading && <LoadingSpinner />}
         {!loading && books.length === 0 && <p>Aucun livre trouvé.</p>}
       </div>
       {books.length > 0 && <HeroParallax products={products} />}

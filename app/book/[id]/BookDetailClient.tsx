@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { HighlightedText } from "@/app/components/HighlightedText";
 
 interface Book {
   id: number;
@@ -23,26 +24,31 @@ interface BookDetailClientProps {
 
 export default function BookDetailClient({ book }: BookDetailClientProps) {
   const searchParams = useSearchParams();
-  // Récupère le mot-clé de recherche depuis le paramètre "q", s'il est présent
   const searchQuery = searchParams.get("q") || "";
   const [expanded, setExpanded] = useState(false);
+  const [contentExpanded, setContentExpanded] = useState(false);
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
+  const toggleContentExpanded = () => setContentExpanded((prev) => !prev);
 
-  // Fonction pour surligner le mot-clé dans le texte
-  const highlightText = (text: string, query: string) => {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.replace(regex, `<mark class="bg-yellow-200">${"$1"}</mark>`);
-  };
-
+  // Tronquer la description à 200 caractères
   const maxLength = 200;
   const shouldTruncate = book.description.length > maxLength;
   const truncatedText =
     shouldTruncate && !expanded
       ? book.description.slice(0, maxLength) + "..."
       : book.description;
-  const highlightedDescription = highlightText(truncatedText, searchQuery);
+  const highlightedDescription = (
+    <HighlightedText text={truncatedText} highlight={searchQuery} />
+  );
+
+  // Tronquer le contenu du livre à 600 caractères
+  const contentMaxLength = 600;
+  const shouldTruncateContent = book.text_content.length > contentMaxLength;
+  const displayedContent =
+    shouldTruncateContent && !contentExpanded
+      ? book.text_content.slice(0, contentMaxLength) + "..."
+      : book.text_content;
 
   return (
     <div className="container mx-auto p-4">
@@ -60,15 +66,12 @@ export default function BookDetailClient({ book }: BookDetailClientProps) {
           )}
         </div>
         <div className="md:w-2/3">
-          <div className="border-2 border-blue-500 rounded-lg p-4 shadow-lg bg-white">
-            <p
-              className="mb-4"
-              dangerouslySetInnerHTML={{ __html: highlightedDescription }}
-            />
+          <div className="border-2 border-[#5f22a3] rounded-lg p-4 shadow-lg bg-white">
+            <p className="mb-4">{highlightedDescription}</p>
             {shouldTruncate && (
               <button
                 onClick={toggleExpanded}
-                className="text-blue-500 hover:underline"
+                className="text-[#5f22a3] hover:underline"
               >
                 {expanded ? "Voir moins" : "Voir plus"}
               </button>
@@ -99,7 +102,15 @@ export default function BookDetailClient({ book }: BookDetailClientProps) {
           </div>
           <div className="mt-4">
             <h2 className="text-2xl font-bold">Contenu du livre</h2>
-            <p>{book.text_content}</p>
+            <p>{displayedContent}</p>
+            {shouldTruncateContent && (
+              <button
+                onClick={toggleContentExpanded}
+                className="text-[#5f22a3] hover:underline"
+              >
+                {contentExpanded ? "Voir moins" : "Voir plus"}
+              </button>
+            )}
           </div>
         </div>
       </div>
