@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import VortexBackground from "./components/VortexBackground";
-import SearchBar from "./components/SearchBar";
 import { HeroParallax, Product } from "./components/ui/heroParalax";
 import { useSearchParams } from "next/navigation";
 import { fetchBooks } from "./utils/fetchBooks";
 import { BackgroundGradientAnimation } from "./components/ui/BackgroundAnimationUi";
+import SearchBarEnhanced from "./components/SearchBarEnhanced";
 
 // Définition de l'interface Book (correspondant à la structure renvoyée par l'API)
 interface Book {
@@ -71,7 +71,7 @@ export default function SearchResults() {
             Trouvez votre Livre en un Clic !
           </h1>
           <div className="w-full max-w-lg">
-            <SearchBar />
+            <SearchBarEnhanced />
           </div>
         </div>
       </section>

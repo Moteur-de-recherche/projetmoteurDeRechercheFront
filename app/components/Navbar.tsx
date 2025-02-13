@@ -13,7 +13,7 @@ export default function Navbar() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/images/logo-moteur-de-recherche-removebg-preview.png" alt="Logo" width={50} height={50} />
+          <Image src="/images/logo-moteur-rechercher-infiinity.png" alt="Logo" width={50} height={50} />
           <span className="text-xl font-bold">Moteur de Recherche</span>
         </Link>
 

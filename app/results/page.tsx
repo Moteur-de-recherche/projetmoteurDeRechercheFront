@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchBooks } from "../utils/fetchBooks";
 import { HeroParallax, Product } from "../components/ui/heroParalax";
-import LoadingSpinner from "../components/LoadingSpinner"; // Import du spinner
+import SearchBarEnhanced from "../components/SearchBarEnhanced"; // Utilise le nouveau SearchBar
 
 interface Book {
   id: number;
@@ -18,7 +18,6 @@ interface Book {
   text_content: string;
 }
 
-// Mise à jour de la fonction de mapping pour inclure tous les champs nécessaires
 const mapBookToProduct = (book: Book): Product => ({
   title: book.title,
   link: `/book/${book.id}`,
@@ -32,6 +31,7 @@ const mapBookToProduct = (book: Book): Product => ({
 export default function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("search") || "";
+  const type = searchParams.get("type") || "search";
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -39,25 +39,25 @@ export default function SearchResults() {
     async function loadBooks() {
       if (query.trim()) {
         setLoading(true);
-        const results = await fetchBooks(query);
+        const results = await fetchBooks(query, type);
         console.log("Livres chargés :", results);
         setBooks(results);
         setLoading(false);
       }
     }
     loadBooks();
-  }, [query]);
+  }, [query, type]);
 
-  // Transformation des livres récupérés en objets Product pour HeroParallax
   const products: Product[] = books.map(mapBookToProduct);
 
   return (
     <div className="relative min-h-screen">
       <div className="container mx-auto px-4 py-8">
+        <SearchBarEnhanced />
         <h1 className="text-3xl text-black font-bold mb-4">
           Résultats pour : `{query}`
         </h1>
-        {loading && <LoadingSpinner />}
+        {loading && <p>Chargement des résultats...</p>}
         {!loading && books.length === 0 && <p>Aucun livre trouvé.</p>}
       </div>
       {books.length > 0 && <HeroParallax products={products} />}

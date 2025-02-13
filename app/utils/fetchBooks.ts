@@ -2,10 +2,27 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export async function fetchBooks(query: string) {
+export async function fetchBooks(query: string, type: string = "search") {
   try {
-    // Utilise l'endpoint highlight-search et le paramètre "q"
-    const url = `${API_BASE_URL}/api/books/highlight-search/?q=${encodeURIComponent(query)}`;
+    let endpoint = "";
+    // Choix de l'endpoint en fonction du type
+    switch (type) {
+      case "list":
+        endpoint = "/api/books/"; // Liste paginée
+        break;
+      case "advanced-search":
+        endpoint = "/api/books/advanced-search/";
+        break;
+      case "highlight-search":
+        endpoint = "/api/books/highlight-search/";
+        break;
+      case "search":
+      default:
+        endpoint = "/api/books/search/";
+        break;
+    }
+
+    const url = `${API_BASE_URL}${endpoint}?q=${encodeURIComponent(query)}`;
     console.log("Fetching URL:", url);
 
     const response = await fetch(url, { mode: "cors" });
@@ -16,7 +33,6 @@ export async function fetchBooks(query: string) {
     const data = await response.json();
     console.log("Données récupérées :", data);
 
-    // On s'attend à ce que la réponse contienne un champ 'results' avec la liste des livres
     if (data.results && Array.isArray(data.results)) {
       return data.results;
     } else {
