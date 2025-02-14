@@ -1,10 +1,16 @@
-// app/book/[id]/BookDetailClient.tsx
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { HighlightedText } from "@/app/components/HighlightedText";
+
+interface Author {
+  id: number;
+  name: string;
+  birth_year: number | null;
+  death_year: number | null;
+}
 
 interface Book {
   id: number;
@@ -16,6 +22,7 @@ interface Book {
   download_count: number;
   copyright: boolean;
   text_content: string;
+  authors?: Author[];
 }
 
 interface BookDetailClientProps {
@@ -85,7 +92,30 @@ export default function BookDetailClient({ book }: BookDetailClientProps) {
                   ? book.subjects.join(", ")
                   : book.subjects}
               </p>
+              
             )}
+
+          {book.authors && book.authors.length > 0 && (
+            <div className="mt-4">
+              <h2 className="text-xl font-bold">
+                Auteur{book.authors.length > 1 ? "s" : ""}
+              </h2>
+              <ul>
+                {book.authors.map((author) => (
+                  <li key={author.id}>
+                    {author.name}{" "}
+                    {(author.birth_year || author.death_year) && (
+                      <span>
+                        (
+                        {author.birth_year ? author.birth_year : "?"} -{" "}
+                        {author.death_year ? author.death_year : "?"})
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
             {book.bookshelves && (
               <p className="mb-2">
                 <strong>Rayons :</strong>{" "}

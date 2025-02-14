@@ -1,4 +1,3 @@
-// app/components/SearchBarEnhanced.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -39,32 +38,50 @@ export default function SearchBarEnhanced() {
   };
 
   return (
+    // On conserve une disposition en ligne (flex-row) pour que le champ et le bouton restent côte à côte.
     <div className="relative flex items-center gap-2">
-      <form onSubmit={handleSearch} className="flex-1">
+      {/* Champ de recherche avec icône intégrée */}
+      <form onSubmit={handleSearch} className="relative flex-1">
+        <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           placeholder="Rechercher un livre..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#441064]"
+          className="w-full border pl-10 pr-4 py-2 h-10 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8b33c2]"
         />
       </form>
+
+      {/* Bouton de sélection de mode de recherche */}
       <div className="relative">
         <button
           onClick={toggleDropdown}
-          className="flex items-center gap-1 border p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+          className="flex items-center gap-1 border h-10 px-4 rounded-md bg-gray-100 hover:bg-[#c28ee2] whitespace-nowrap"
         >
-          <FiSearch className="w-5 h-5" />
-          <span className="hidden sm:inline">
+          <span className="text-sm">
             {SEARCH_MODES.find((m) => m.value === selectedMode)?.label}
           </span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
         </button>
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-56 bg-white border rounded-md shadow-lg z-10 p-2">
+          <div className="absolute right-0 mt-2 w-56 bg-white border rounded-md z-10 p-2 shadow-lg">
             {SEARCH_MODES.map((mode) => (
               <label
                 key={mode.value}
-                className="flex items-center gap-2 cursor-pointer py-1"
+                className="flex items-center gap-2 cursor-pointer py-1 hover:bg-[#c28ee2] px-2 rounded"
               >
                 <input
                   type="radio"
@@ -74,7 +91,7 @@ export default function SearchBarEnhanced() {
                   onChange={() => handleModeChange(mode.value)}
                   className="form-radio"
                 />
-                <span>{mode.label}</span>
+                <span className="text-sm">{mode.label}</span>
               </label>
             ))}
             <button
@@ -86,6 +103,6 @@ export default function SearchBarEnhanced() {
           </div>
         )}
       </div>
-    </div> 
+    </div>
   );
 }

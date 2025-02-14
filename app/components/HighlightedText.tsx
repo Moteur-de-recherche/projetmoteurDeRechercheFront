@@ -1,4 +1,3 @@
-// app/components/HighlightedText.tsx
 "use client";
 
 import React, { useMemo } from "react";
@@ -8,11 +7,17 @@ interface HighlightedTextProps {
   highlight: string;
 }
 
+// Fonction pour échapper les caractères spéciaux dans une chaîne
+const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 export const HighlightedText: React.FC<HighlightedTextProps> = ({ text, highlight }) => {
   const parts = useMemo(() => {
     if (!highlight.trim()) return [text];
+    const escapedHighlight = escapeRegExp(highlight);
     // Expression régulière insensible à la casse
-    const regex = new RegExp(`(${highlight})`, "gi");
+    const regex = new RegExp(`(${escapedHighlight})`, "gi");
     return text.split(regex);
   }, [text, highlight]);
 
@@ -20,7 +25,7 @@ export const HighlightedText: React.FC<HighlightedTextProps> = ({ text, highligh
     <>
       {parts.map((part, index) =>
         part.toLowerCase() === highlight.toLowerCase() ? (
-          <mark key={index} className="bg-yellow-300 text-white font-bold">
+          <mark key={index} className="bg-[#ebf232] text-black font-bold">
             {part}
           </mark>
         ) : (
